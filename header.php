@@ -171,6 +171,12 @@ $fn = new custom_functions;
                         <span>Users</span>
                     </a>
                 </li>
+                <li class="treeview">
+                    <a href="faq.php">
+                    <i class="fa fa-question"></i>
+                        <span>Faq</span>
+                    </a>
+                </li>
             </ul>
             </section>
             <!-- /.sidebar -->
