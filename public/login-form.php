@@ -1,6 +1,5 @@
 <?php
 
-
 include('./includes/variables.php');
 include_once('includes/custom-functions.php');
 $fn = new custom_functions;
@@ -28,18 +27,24 @@ if (isset($_POST['btnLogin'])) {
         $error['password'] = "*Password should be filled.";
     }
 
-    // if email and password is not empty, check in database
     if (!empty($email) && !empty($password)) {
-        if($email == 'admin' && $password == 'admin123'){
-            $_SESSION['id'] = '1';
-            $_SESSION['role'] ='admin';
-            $_SESSION['username'] = 'username';
-            $_SESSION['email'] = 'admin@gmail.com';
-            $_SESSION['timeout'] = $currentTime + $expired;
-            header("location: home.php");
-            
-        }
-        else{
+        if (($email == 'ashok' && $password == 'ashok2468') || ($email == 'dinesh' && $password == 'dinesh123')) {
+            if ($email == 'ashok') {
+                $_SESSION['id'] = '1';
+                $_SESSION['role'] ='Super Admin';
+                $_SESSION['username'] = 'ashok';
+                $_SESSION['email'] = 'ashok@gmail.com';
+                $_SESSION['timeout'] = $currentTime + $expired;
+                header("location: home.php");
+            } elseif ($email == 'dinesh') {
+                $_SESSION['id'] = '2'; 
+                $_SESSION['role'] ='Admin'; 
+                $_SESSION['username'] = 'dinesh'; 
+                $_SESSION['email'] = 'dinesh@gmail.com';
+                $_SESSION['timeout'] = $currentTime + $expired;
+                header("location: home.php");
+            }
+        } else {
             $error['failed'] = "<span class='label label-danger'>Invalid Email or Password!</span>";
         }
     }

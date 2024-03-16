@@ -48,6 +48,7 @@ $db->connect();
         $currentdate = date('Y-m-d');
 
         //users
+        if ($_SESSION['role'] == 'Super Admin') {
         if (isset($_GET['table']) && $_GET['table'] == 'users') {
 
             $offset = 0;
@@ -108,7 +109,67 @@ $db->connect();
             $bulkData['rows'] = $rows;
             print_r(json_encode($bulkData));
         }
-       
+    }
+    if ($_SESSION['role'] == 'Admin') {
+        if (isset($_GET['table']) && $_GET['table'] == 'users') {
+            $offset = 0;
+            $limit = 10;
+            $where = '';
+            $sort = 'id';
+            $order = 'DESC';
+            if (isset($_GET['offset']))
+                $offset = $db->escapeString($_GET['offset']);
+            if (isset($_GET['limit']))
+                $limit = $db->escapeString($_GET['limit']);
+            if (isset($_GET['sort']))
+                $sort = $db->escapeString($_GET['sort']);
+            if (isset($_GET['order']))
+                $order = $db->escapeString($_GET['order']);
+    
+            if (isset($_GET['search']) && !empty($_GET['search'])) {
+                $search = $db->escapeString($_GET['search']);
+                $where .= "WHERE id like '%" . $search . "%' OR name like '%" . $search . "%' OR mobile like '%" . $search . "%'";
+            }
+    
+            $sql = "SELECT COUNT(`id`) as total FROM `users` " . $where;
+            $db->sql($sql);
+            $res = $db->getResult();
+            foreach ($res as $row) {
+                $total = $row['total'];
+            }
+            
+            $sql = "SELECT * FROM users WHERE refer_code LIKE 'CMDS%' " . $where . " ORDER BY " . $sort . " " . $order . " LIMIT " . $offset . ", " . $limit;
+            $db->sql($sql);
+            $res = $db->getResult();
+            
+    
+            $bulkData = array();
+            $bulkData['total'] = $total;
+    
+            $rows = array();
+            $tempRow = array();
+    
+            foreach ($res as $row) {
+                //$operate = ' <a href="edit-payment_setting.php?id=' . $row['id'] . '"><i class="fa fa-edit"></i>Edit</a>';
+                $operate = ' <a class="text text-danger" href="delete-users.php?id=' . $row['id'] . '"><i class="fa fa-trash"></i>Delete</a>';
+                $tempRow['id'] = $row['id'];
+                $tempRow['name'] = $row['name'];
+                $tempRow['mobile'] = $row['mobile'];
+                $tempRow['email'] = $row['email'];
+                $tempRow['referred_by'] = $row['referred_by'];
+                $tempRow['refer_code'] = $row['refer_code'];
+                $tempRow['location'] = $row['location'];
+                $tempRow['operate'] = $operate;
+                $rows[] = $tempRow;
+            }
+    
+            $bulkData['rows'] = $rows;
+            print_r(json_encode($bulkData));
+        }
+    }
+
+    
+        
         
         //faq
 

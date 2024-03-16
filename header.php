@@ -127,15 +127,15 @@ $fn = new custom_functions;
                             <li class="dropdown user user-menu">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     <img src="images/avatar.png" class="user-image" alt="User Image">
-                                    <span class="hidden-xs">Admin</span>
+                                    <span class="hidden-xs"><?php echo $_SESSION['role'] ?></span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <!-- User image -->
                                     <li class="user-header">
                                         <img src="images/avatar.png" class="img-circle" alt="User Image">
                                         <p>
-                                            Admin
-                                            <small>admin@gmail.com</small>
+                                             <small><?php echo $_SESSION['username'] ?></small>
+                                            <small><?php echo $_SESSION['email'] ?></small>
                                         </p>
                                     </li>
                                     <li class="user-footer">
