@@ -30,20 +30,10 @@ if (isset($_POST['btnEdit'])){
     $min_withdrawal = $db->escapeString($_POST['min_withdrawal']);
     $status = $db->escapeString($_POST['status']);
     $total_referrals = $db->escapeString(($_POST['total_referrals']));
-    $order_available = $db->escapeString(($_POST['order_available']));
-    $reset_available = $db->escapeString(($_POST['reset_available']));
     $convert_type = $db->escapeString(($_POST['convert_type']));
 
    
 
-    if($reset_available == 1){
-        $total_orders = 0;
-        $today_orders = 0;
-        $total_referrals = 0;
-        $joined_date = $date;
-        $worked_days = 0;
-
-    }
 
     
     $error = array();
@@ -218,6 +208,18 @@ if (isset($_POST['btnCancel'])) { ?>
                                      <label for="exampleInputEmail1"> Refer Code</label> <i class="text-danger asterik">*</i><?php echo isset($error['refer_code']) ? $error['refer_code'] : ''; ?>
                                      <input type="text" class="form-control" name="refer_code" value="<?php echo $res[0]['refer_code']; ?>">
                                    </div>
+                                   <div class="col-md-3">
+                                <div class="form-group">
+                                <label for="exampleInputEmail1">Convert Type</label> <i class="text-danger asterik">*</i>
+                                    <select id='convert_type' name="convert_type" class='form-control'>
+                                    <option value='0' <?php if ($res[0]['convert_type'] == '0') echo 'selected'; ?>>Select</option>
+                                     <option value='1' <?php if ($res[0]['convert_type'] == '1') echo 'selected'; ?>>Company convert</option>
+                                      <option value='2' <?php if ($res[0]['convert_type'] == '2') echo 'selected'; ?>>User convert</option>
+                                      <option value='3' <?php if ($res[0]['convert_type'] == '3') echo 'selected'; ?>>e-commerce</option>
+                                      <option value='4' <?php if ($res[0]['convert_type'] == '4') echo 'selected'; ?>>Joined</option>
+                                    </select>
+                                </div>
+                            </div>
                                    <div class="form-group col-md-6">
                                     <label class="control-label">Status</label><i class="text-danger asterik">*</i><br>
                                     <div id="status" class="btn-group">
@@ -254,7 +256,10 @@ if (isset($_POST['btnCancel'])) { ?>
                                     <label for="exampleInputEmail1">Min Withdrawal</label><i class="text-danger asterik">*</i>
                                     <input type="text" class="form-control" name="min_withdrawal" value="<?php echo $res[0]['min_withdrawal']; ?>">
                                 </div>
-                                  
+                                <div class="col-md-3">
+                                    <label for="exampleInputEmail1">Total Referrals</label> <i class="text-danger asterik">*</i><?php echo isset($error['total_referrals']) ? $error['total_referrals'] : ''; ?>
+                                    <input type="text" class="form-control" name="total_referrals" value="<?php echo $res[0]['total_referrals']; ?>">
+                                </div>
                             </div>
                         </div>
                         <br>
@@ -272,42 +277,9 @@ if (isset($_POST['btnCancel'])) { ?>
                                     <input type="checkbox" id="blocked_button" class="js-switch" <?= isset($res[0]['blocked']) && $res[0]['blocked'] == 1 ? 'checked' : '' ?>>
                                     <input type="hidden" id="blocked" name="blocked" value="<?= isset($res[0]['blocked']) && $res[0]['blocked'] == 1 ? 1 : 0 ?>">
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">Order Available</label><br>
-                                    <input type="checkbox" id="order_button" class="js-switch" <?= isset($res[0]['order_available']) && $res[0]['order_available'] == 1 ? 'checked' : '' ?>>
-                                    <input type="hidden" id="order_available" name="order_available" value="<?= isset($res[0]['order_available']) && $res[0]['order_available'] == 1 ? 1 : 0 ?>">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">Reset</label><br>
-                                    <input type="checkbox" id="reset_button" class="js-switch">
-                                    <input type="hidden" id="reset_available" name="reset_available">
-                                </div>
-                            </div>
-                    </div>
-                    <br>
-                        <div class="row">
-                        <div class="col-md-3">
-                                    <label for="exampleInputEmail1">Total Referrals</label> <i class="text-danger asterik">*</i><?php echo isset($error['total_referrals']) ? $error['total_referrals'] : ''; ?>
-                                    <input type="text" class="form-control" name="total_referrals" value="<?php echo $res[0]['total_referrals']; ?>">
-                                </div>
-                                 
-                                <div class="col-md-3">
-                                <div class="form-group">
-                                <label for="exampleInputEmail1">Convert Type</label> <i class="text-danger asterik">*</i>
-                                    <select id='convert_type' name="convert_type" class='form-control'>
-                                    <option value='0' <?php if ($res[0]['convert_type'] == '0') echo 'selected'; ?>>Select</option>
-                                     <option value='1' <?php if ($res[0]['convert_type'] == '1') echo 'selected'; ?>>Company convert</option>
-                                      <option value='2' <?php if ($res[0]['convert_type'] == '2') echo 'selected'; ?>>User convert</option>
-                                      <option value='3' <?php if ($res[0]['convert_type'] == '3') echo 'selected'; ?>>e-commerce</option>
-                                      <option value='4' <?php if ($res[0]['convert_type'] == '4') echo 'selected'; ?>>Joined</option>
-                                    </select>
-                                </div>
-                            </div>
-                            </div>
+                            </div>   
+                       </div>
+                    
                             <br>
                             </div>
                      
