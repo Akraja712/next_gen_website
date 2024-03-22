@@ -29,11 +29,8 @@ if (isset($_POST['btnEdit'])){
     $blocked = $db->escapeString($_POST['blocked']);
     $min_withdrawal = $db->escapeString($_POST['min_withdrawal']);
     $status = $db->escapeString($_POST['status']);
-    $device_id = $db->escapeString(($_POST['device_id']));
     $total_referrals = $db->escapeString(($_POST['total_referrals']));
     $order_available = $db->escapeString(($_POST['order_available']));
-    $hiring_earings = $db->escapeString(($_POST['hiring_earings']));
-    $orders_earnings = $db->escapeString(($_POST['orders_earnings']));
     $reset_available = $db->escapeString(($_POST['reset_available']));
     $convert_type = $db->escapeString(($_POST['convert_type']));
 
@@ -133,7 +130,7 @@ if (isset($_POST['btnEdit'])){
            
            
 
-            $sql_query = "UPDATE users SET mobile='$mobile',earn='$earn',balance='$balance',referred_by='$referred_by',refer_code='$refer_code',withdrawal_status='$withdrawal_status',min_withdrawal='$min_withdrawal',device_id='$device_id',status=$status,blocked = '$blocked',total_referrals = '$total_referrals',orders_earnings = '$orders_earnings',hiring_earings = '$hiring_earings',convert_type = '$convert_type'   WHERE id =  $ID";
+            $sql_query = "UPDATE users SET mobile='$mobile',earn='$earn',balance='$balance',referred_by='$referred_by',refer_code='$refer_code',withdrawal_status='$withdrawal_status',min_withdrawal='$min_withdrawal',status=$status,blocked = '$blocked',total_referrals = '$total_referrals',convert_type = '$convert_type'   WHERE id =  $ID";
             $db->sql($sql_query);
             $update_result = $db->getResult();
     
@@ -257,10 +254,7 @@ if (isset($_POST['btnCancel'])) { ?>
                                     <label for="exampleInputEmail1">Min Withdrawal</label><i class="text-danger asterik">*</i>
                                     <input type="text" class="form-control" name="min_withdrawal" value="<?php echo $res[0]['min_withdrawal']; ?>">
                                 </div>
-                                    <div class="col-md-3">
-                                    <label for="exampleInputEmail1">Device Id</label> <i class="text-danger asterik">*</i><?php echo isset($error['device_id']) ? $error['device_id'] : ''; ?>
-                                    <input type="text" class="form-control" name="device_id" value="<?php echo $res[0]['device_id']; ?>">
-                                </div>
+                                  
                             </div>
                         </div>
                         <br>
@@ -300,14 +294,7 @@ if (isset($_POST['btnCancel'])) { ?>
                                     <label for="exampleInputEmail1">Total Referrals</label> <i class="text-danger asterik">*</i><?php echo isset($error['total_referrals']) ? $error['total_referrals'] : ''; ?>
                                     <input type="text" class="form-control" name="total_referrals" value="<?php echo $res[0]['total_referrals']; ?>">
                                 </div>
-                                    <div class="col-md-3">
-                                        <label for="exampleInputEmail1"> Hiring Earnings</label> <i class="text-danger asterik">*</i><?php echo isset($error['hiring_earings']) ? $error['hiring_earings'] : ''; ?>
-                                        <input type="number" class="form-control" name="hiring_earings" value="<?php echo $res[0]['hiring_earings']; ?>">
-                                    </div>
-                                    <div class="col-md-3">
-                                    <label for="exampleInputEmail1">Orders Earnings</label> <i class="text-danger asterik">*</i><?php echo isset($error['orders_earnings']) ? $error['orders_earnings'] : ''; ?>
-                                    <input type="number" class="form-control" name="orders_earnings" value="<?php echo $res[0]['orders_earnings']; ?>">
-                                </div>
+                                 
                                 <div class="col-md-3">
                                 <div class="form-group">
                                 <label for="exampleInputEmail1">Convert Type</label> <i class="text-danger asterik">*</i>
