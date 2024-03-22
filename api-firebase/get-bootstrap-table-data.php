@@ -64,13 +64,7 @@ if (isset($_GET['table']) && $_GET['table'] == 'users') {
         }
         $where .= "joined_date = '$date' ";
     }
-    if (isset($_GET['enroll_date']) && $_GET['enroll_date'] != '') {
-        $enroll_date = $db->escapeString($fn->xss_clean($_GET['enroll_date']));
-        if (!empty($where)) {
-            $where .= "AND ";
-        }
-        $where .= "enroll_date = '$enroll_date' ";
-    }
+ 
     if (isset($_GET['referred_by']) && $_GET['referred_by'] != '') {
         $referred_by = $db->escapeString($fn->xss_clean($_GET['referred_by']));
         if (!empty($where)) {
@@ -78,13 +72,7 @@ if (isset($_GET['table']) && $_GET['table'] == 'users') {
         }
         $where .= "referred_by = '$referred_by' ";
     }
-    if (isset($_GET['student_plan']) && $_GET['student_plan'] != '') {
-        $student_plan = $db->escapeString($fn->xss_clean($_GET['student_plan']));
-        if (!empty($where)) {
-            $where .= "AND ";
-        }
-        $where .= "student_plan = '$student_plan' ";
-    }
+ 
   
     if (isset($_GET['offset']))
         $offset = $db->escapeString($fn->xss_clean($_GET['offset']));
@@ -117,32 +105,22 @@ if (isset($_GET['table']) && $_GET['table'] == 'users') {
     $rows = array();
     $tempRow = array();
     foreach ($res as $row) {
-        $support_id = $row['support_id'];
+      
 
         $operate = ' <a href="edit-users.php?id=' . $row['id'] . '"><i class="fa fa-edit"></i>Edit</a>';
         $operate .= ' <a class="text text-danger" href="delete-users.php?id=' . $row['id'] . '"><i class="fa fa-trash"></i>Delete</a>';
         $tempRow['id'] = $row['id'];
         $tempRow['name'] = $row['name'];
-        $tempRow['fcm_id'] = $row['fcm_id'];
+        
         $tempRow['total_referrals'] = $row['total_referrals'];
         $tempRow['mobile'] = $row['mobile'];
         $tempRow['refer_code'] = $row['refer_code'];
         $tempRow['referred_by'] = $row['referred_by'];
         $tempRow['earn'] = $row['earn'];
-        $tempRow['student_plan'] = $row['student_plan'];
-        $tempRow['today_orders'] = $row['today_orders'];
-        $tempRow['total_orders'] = $row['total_orders'];
-        $tempRow['description'] = $row['description'];
         $tempRow['balance'] = $row['balance'];
         $tempRow['orders_earnings'] = $row['orders_earnings'];
         $tempRow['hiring_earings'] = $row['hiring_earings'];
-        $tempRow['registered_date'] = $row['registered_date'];
         $tempRow['average_orders'] = $row['average_orders'];
-        $sql = "SELECT name FROM `staffs` WHERE id = $support_id";
-        $db->sql($sql);
-        $res = $db->getResult();
-        $support_name = isset($res[0]['name']) ? $res[0]['name'] :"";
-        $tempRow['support_name'] = $support_name;
         $tempRow['account_num'] = $row['account_num'];
         $tempRow['holder_name'] = $row['holder_name'];
         $tempRow['bank'] = $row['bank'];
@@ -156,8 +134,6 @@ if (isset($_GET['table']) && $_GET['table'] == 'users') {
         else
             $tempRow['status']="<label class='label label-danger'>Blocked</label>";
 
-         $tempRow['joined_date'] = $row['joined_date'];
-         $tempRow['enroll_date'] = $row['enroll_date'];
         $tempRow['operate'] = $operate;
         $rows[] = $tempRow;
     }

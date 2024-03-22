@@ -29,21 +29,11 @@ if (isset($_POST['btnEdit'])){
     $blocked = $db->escapeString($_POST['blocked']);
     $min_withdrawal = $db->escapeString($_POST['min_withdrawal']);
     $status = $db->escapeString($_POST['status']);
-   
     $device_id = $db->escapeString(($_POST['device_id']));
-  
-
-
     $total_referrals = $db->escapeString(($_POST['total_referrals']));
-
     $order_available = $db->escapeString(($_POST['order_available']));
-
-   
     $hiring_earings = $db->escapeString(($_POST['hiring_earings']));
     $orders_earnings = $db->escapeString(($_POST['orders_earnings']));
-
- 
-
     $reset_available = $db->escapeString(($_POST['reset_available']));
     $convert_type = $db->escapeString(($_POST['convert_type']));
 
@@ -199,10 +189,6 @@ if (isset($_POST['btnCancel'])) { ?>
             <!-- general form elements -->
             <div class="box box-primary">
                <div class="box-header with-border">
-                           <div class="form-group col-md-3">
-                                <h4 class="box-title"> </h4>
-                                <a class="btn btn-block btn-primary" href="add-order.php?id=<?php echo $ID ?>"><i class="fa fa-plus-square"></i> Add Orders</a>
-                            </div>
                              <div class="form-group col-md-3">
                                 <h4 class="box-title"> </h4>
                                 <a class="btn btn-block btn-success" href="add-balance.php?id=<?php echo $ID ?>"><i class="fa fa-plus-square"></i>  Add Balance</a>
