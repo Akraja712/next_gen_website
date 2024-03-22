@@ -314,8 +314,9 @@ if (isset($_POST['btnCancel'])) { ?>
                                     <select id='convert_type' name="convert_type" class='form-control'>
                                     <option value='0' <?php if ($res[0]['convert_type'] == '0') echo 'selected'; ?>>Select</option>
                                      <option value='1' <?php if ($res[0]['convert_type'] == '1') echo 'selected'; ?>>Company convert</option>
-                                      <option value='2' <?php if ($res[0]['convert_type'] == '2') echo 'selected'; ?>>user convert</option>
+                                      <option value='2' <?php if ($res[0]['convert_type'] == '2') echo 'selected'; ?>>User convert</option>
                                       <option value='3' <?php if ($res[0]['convert_type'] == '3') echo 'selected'; ?>>e-commerce</option>
+                                      <option value='4' <?php if ($res[0]['convert_type'] == '4') echo 'selected'; ?>>Joined</option>
                                     </select>
                                 </div>
                             </div>
