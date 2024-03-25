@@ -4,7 +4,7 @@ $db = new Database();
 $db->connect();
 
 $currentdate = date('Y-m-d');
-$sql_query = "SELECT id, mobile, name, email, total_referrals, earn, balance, device_id, referred_by, refer_code, withdrawal_status, status, joined_date, last_updated, min_withdrawal, account_num, holder_name, bank, branch, ifsc, CONCAT(',',aadhaar_num, ',') AS aadhaar_num,location, password, average_orders, orders_earnings, hiring_earings,blocked FROM `users`"; // Fetch all users without any condition
+$sql_query = "SELECT * FROM `users` WHERE $condition";
 $db->sql($sql_query);
 $developer_records = $db->getResult();
 
