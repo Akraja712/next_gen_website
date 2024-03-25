@@ -36,7 +36,7 @@ if (isset($_POST['btnEdit'])){
     $bank = $db->escapeString($_POST['bank']);
     $branch = $db->escapeString(($_POST['branch']));
     $ifsc = $db->escapeString(($_POST['ifsc']));
-    $ecom_status = $db->escapeString(($_POST['ecom_status']));
+   // $ecom_status = $db->escapeString(($_POST['ecom_status']));
 
 
     $error = array();
@@ -59,7 +59,7 @@ if (isset($_POST['btnEdit'])){
 
     
             
-            $sql_query = "UPDATE users SET mobile='$mobile',earn='$earn',balance='$balance',referred_by='$referred_by',refer_code='$refer_code',withdrawal_status='$withdrawal_status',min_withdrawal='$min_withdrawal',status=$status,blocked = '$blocked',total_referrals = '$total_referrals',convert_type = '$convert_type',holder_name='$holder_name', bank='$bank', branch='$branch', ifsc='$ifsc', account_num='$account_num',ecom_status = '$ecom_status'  WHERE id =  $ID";
+            $sql_query = "UPDATE users SET mobile='$mobile',earn='$earn',balance='$balance',referred_by='$referred_by',refer_code='$refer_code',withdrawal_status='$withdrawal_status',min_withdrawal='$min_withdrawal',status=$status,blocked = '$blocked',total_referrals = '$total_referrals',convert_type = '$convert_type',holder_name='$holder_name', bank='$bank', branch='$branch', ifsc='$ifsc', account_num='$account_num'  WHERE id =  $ID";
             $db->sql($sql_query);
             $update_result = $db->getResult();
     
@@ -248,20 +248,7 @@ if (isset($_POST['btnCancel'])) { ?>
                                
                                 </div>
                             </div>
-                            <br>
-                            <div class="row">
-                            <div class="form-group col-md-6">
-                                    <label class="control-label">Ecom Status</label><i class="text-danger asterik">*</i><br>
-                                    <div id="ecom_status" class="btn-group">
-                                        <label class="btn btn-primary" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                                            <input type="radio" name="ecom_status" value="0" <?= ($res[0]['ecom_status'] == 0) ? 'checked' : ''; ?>>Unverified
-                                        </label>
-                                        <label class="btn btn-success" data-toggle-class="btn-default" data-toggle-passive-class="btn-default">
-                                            <input type="radio" name="ecom_status" value="1" <?= ($res[0]['ecom_status'] == 1) ? 'checked' : ''; ?>> Verified
-                                        </label>
-                                    </div>
-                                </div>
-                                </div>
+                            
                             <br>
                             </div>
                      
