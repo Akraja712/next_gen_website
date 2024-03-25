@@ -522,4 +522,244 @@ if (isset($_GET['table']) && $_GET['table'] == 'transactions') {
     $bulkData['rows'] = $rows;
     print_r(json_encode($bulkData));
 }
+
+//staffs table goes here
+if (isset($_GET['table']) && $_GET['table'] == 'staffs') {
+    $offset = 0;
+    $limit = 10;
+    $where = '';
+    $sort = 'id';
+    $order = 'DESC';
+    if ((isset($_GET['status'])  && $_GET['status'] != '')) {
+        $status = $db->escapeString($fn->xss_clean($_GET['status']));
+        $where .= "AND s.status='$status' ";
+    }
+
+    if (isset($_GET['offset']))
+        $offset = $db->escapeString($fn->xss_clean($_GET['offset']));
+    if (isset($_GET['limit']))
+        $limit = $db->escapeString($fn->xss_clean($_GET['limit']));
+
+    if (isset($_GET['sort']))
+        $sort = $db->escapeString($fn->xss_clean($_GET['sort']));
+    if (isset($_GET['order']))
+        $order = $db->escapeString($fn->xss_clean($_GET['order']));
+
+        if (isset($_GET['search']) && !empty($_GET['search'])) {
+            $search = $db->escapeString($fn->xss_clean($_GET['search']));
+            $where .= "AND (s.mobile LIKE '%" . $search . "%' OR s.name LIKE '%" . $search . "%') ";
+        }
+        
+    if (isset($_GET['sort'])) {
+        $sort = $db->escapeString($_GET['sort']);
+    }
+    if (isset($_GET['order'])) {
+        $order = $db->escapeString($_GET['order']);
+    }
+  
+    $join = "LEFT JOIN `branches` b ON s.branch_id = b.id WHERE s.id IS NOT NULL ";
+
+    $sql = "SELECT COUNT(s.id) as total FROM `staffs` s $join " . $where . "";
+    $db->sql($sql);
+    $res = $db->getResult();
+    foreach ($res as $row)
+        $total = $row['total'];
+
+    $sql = "SELECT s.id AS id,s.*,b.short_code AS branch FROM `staffs` s $join 
+    $where ORDER BY $sort $order LIMIT $offset, $limit";
+     $db->sql($sql);
+    $res = $db->getResult();
+
+    $bulkData = array();
+    $bulkData['total'] = $total;
+    $rows = array();
+    $tempRow = array();
+    foreach ($res as $row) {
+        $staff_id = $row['id'];
+        $operate = '<a href="edit-staff.php?id=' . $row['id'] . '" class="text text-primary"><i class="fa fa-edit"></i>Edit</a>';
+        $operate .= ' <a class="text text-danger" href="delete-staff.php?id=' . $row['id'] . '"><i class="fa fa-trash"></i>Delete</a>';
+        $tempRow['id'] = $row['id'];
+        $tempRow['name'] = $row['name'];
+    
+        $tempRow['mobile'] = $row['mobile'];
+        $tempRow['balance'] = $row['balance'];
+        $tempRow['email'] = $row['email'];
+        $tempRow['branch'] = $row['branch'];
+        $sql = "SELECT id FROM `incentives` WHERE DATE(datetime) = '$currentdate' AND amount = 50 AND staff_id = $staff_id GROUP BY user_id";
+        $db->sql($sql);
+        $res = $db->getResult();
+        $num = $db->numRows($res);
+        $direct_join = $num;
+        $sql = "SELECT id FROM `incentives` WHERE DATE(datetime) = '$currentdate' AND amount = 7.50 AND staff_id = $staff_id GROUP BY user_id";
+        $db->sql($sql);
+        $res = $db->getResult();
+        $num = $db->numRows($res);
+        $today_refer_joins = $num;
+
+        $sql = "SELECT COUNT(id) AS total FROM `users` WHERE support_id = $staff_id AND status = 1 AND today_orders != 0";
+        $db->sql($sql);
+        $res = $db->getResult();
+        $num = $res[0]['total'];
+        $today_active_users = $num;
+        $tempRow['today_direct_joins'] = $direct_join;
+        $tempRow['today_refer_joins'] = $today_refer_joins;
+        $tempRow['today_active_users'] = $today_active_users;
+        $tempRow['operate'] = $operate;
+        $rows[] = $tempRow;
+    }
+    $bulkData['rows'] = $rows;
+    print_r(json_encode($bulkData));
+}
+if (isset($_GET['table']) && $_GET['table'] == 'staff_withdrawals') {
+    $offset = 0;
+    $limit = 10;
+    $where = '';
+    $sort = 'w.id';
+    $order = 'DESC';
+    if ((isset($_GET['user_id']) && $_GET['user_id'] != '')) {
+        $user_id = $db->escapeString($fn->xss_clean($_GET['user_id']));
+        $where .= "AND w.staff_id = '$user_id'";
+    }
+    if (isset($_GET['offset']))
+        $offset = $db->escapeString($fn->xss_clean($_GET['offset']));
+    if (isset($_GET['limit']))
+        $limit = $db->escapeString($fn->xss_clean($_GET['limit']));
+
+    if (isset($_GET['sort']))
+        $sort = $db->escapeString($fn->xss_clean($_GET['sort']));
+    if (isset($_GET['order']))
+        $order = $db->escapeString($fn->xss_clean($_GET['order']));
+
+        if (isset($_GET['search']) && !empty($_GET['search'])) {
+            $search = $db->escapeString($fn->xss_clean($_GET['search']));
+            $where .= "AND s.name like '%" . $search . "%' OR t.amount like '%" . $search . "%' OR t.id like '%" . $search . "%'  OR t.type like '%" . $search . "%' OR s.mobile like '%" . $search . "%' ";
+        }
+        
+    if (isset($_GET['sort'])) {
+        $sort = $db->escapeString($_GET['sort']);
+    }
+    if (isset($_GET['order'])) {
+        $order = $db->escapeString($_GET['order']);
+    }
+    $join = "WHERE w.staff_id = s.id ";
+
+    $sql = "SELECT COUNT(w.id) as total FROM `staff_withdrawals` w,`staffs` s $join ". $where ."";
+    $db->sql($sql);
+    $res = $db->getResult();
+    foreach ($res as $row)
+        $total = $row['total'];
+        if (isset($_GET['search']) && !empty($_GET['search'])) {
+            $sql = "SELECT w.id AS id,w.*,s.name,s.mobile,s.balance,u.mobile,s.branch,s.bank_name,s.bank_account_number,s.ifsc_code FROM `staff_withdrawals` w,`staffs` s $join
+                        $where ORDER BY $sort $order LIMIT $offset, $limit";
+             $db->sql($sql);
+        }
+        else{
+            $sql = "SELECT w.id AS id,w.*,s.name,s.balance,s.mobile,s.branch,s.bank_name,s.bank_account_number,s.ifsc_code FROM `staff_withdrawals` w,`staffs` s $join
+                    $where ORDER BY $sort $order LIMIT $offset, $limit";
+             $db->sql($sql);
+        }
+    $res = $db->getResult();
+
+    $bulkData = array();
+    $bulkData['total'] = $total;
+    $rows = array();
+    $tempRow = array();
+    foreach ($res as $row) {
+        // $operate = ' <a class="text text-danger" href="delete-withdrawal.php?id=' . $row['id'] . '"><i class="fa fa-trash"></i>Delete</a>';
+        // $operate .= ' <a href="edit-withdrawal.php?id=' . $row['id'] . '"><i class="fa fa-edit"></i>Edit</a>';
+        $checkbox = '<input type="checkbox" name="enable[]" value="'.$row['id'].'">';
+        $tempRow['id'] = $row['id'];
+        $tempRow['name'] = $row['name'];
+        $tempRow['amount'] = $row['amount'];
+        $tempRow['datetime'] = $row['datetime'];
+        $tempRow['bank_account_number'] = ','.$row['bank_account_number'].',';
+        $tempRow['bank_name'] = $row['bank_name'];
+        $tempRow['branch'] = $row['branch'];
+        $tempRow['mobile'] = $row['mobile'];
+        $tempRow['balance'] = $row['balance'];
+        $tempRow['ifsc_code'] = $row['ifsc_code'];
+        $tempRow['column'] = $checkbox;
+        if($row['status']==1)
+            $tempRow['status'] ="<p class='text text-success'>Paid</p>";
+        elseif($row['status']==0)
+            $tempRow['status']="<p class='text text-primary'>Unpaid</p>";
+        else
+            $tempRow['status']="<p class='text text-danger'>Cancelled</p>";
+        // $tempRow['operate'] = $operate;
+        $rows[] = $tempRow;
+    }
+    $bulkData['rows'] = $rows;
+    print_r(json_encode($bulkData));
+}
+
+
+//staff transactions table goes here
+if (isset($_GET['table']) && $_GET['table'] == 'staff_transactions') {
+    $offset = 0;
+    $limit = 10;
+    $where = '';
+    $sort = 'id';
+    $order = 'DESC';
+    if (isset($_GET['offset']))
+        $offset = $db->escapeString($fn->xss_clean($_GET['offset']));
+    if (isset($_GET['limit']))
+        $limit = $db->escapeString($fn->xss_clean($_GET['limit']));
+
+    if (isset($_GET['sort']))
+        $sort = $db->escapeString($fn->xss_clean($_GET['sort']));
+    if (isset($_GET['order']))
+        $order = $db->escapeString($fn->xss_clean($_GET['order']));
+    if (isset($_GET['type']) && !empty($_GET['type'])){
+        $type = $db->escapeString($fn->xss_clean($_GET['type']));
+        $where .= "AND t.type = '$type' ";
+      
+    }
+    if (isset($_GET['staff']) && !empty($_GET['staff'])) {
+        $staff = $db->escapeString($fn->xss_clean($_GET['staff']));
+        $where .= "AND s.id = '$staff' ";
+    }
+    
+    
+
+    if (isset($_GET['search']) && !empty($_GET['search'])) {
+        $search = $db->escapeString($fn->xss_clean($_GET['search']));
+        $where .= "AND s.name like '%" . $search . "%' OR t.amount like '%" . $search . "%' OR t.id like '%" . $search . "%'  OR t.type like '%" . $search . "%' OR s.mobile like '%" . $search . "%' ";
+    }
+    if (isset($_GET['sort'])) {
+        $sort = $db->escapeString($_GET['sort']);
+    }
+    if (isset($_GET['order'])) {
+        $order = $db->escapeString($_GET['order']);
+    }
+    $join = "LEFT JOIN `staffs` s ON t.staff_id = s.id WHERE t.id IS NOT NULL ";
+
+    
+    $sql = "SELECT COUNT(t.id) as total FROM `staff_transactions` t $join " . $where . "";
+    $db->sql($sql);
+    $res = $db->getResult();
+    foreach ($res as $row)
+        $total = $row['total'];
+
+    $sql = "SELECT t.id AS id,t.*,s.name,s.mobile FROM `staff_transactions` t $join 
+    $where ORDER BY $sort $order LIMIT $offset, $limit";
+     $db->sql($sql);
+    $res = $db->getResult();
+
+    $bulkData = array();
+    $bulkData['total'] = $total;
+    $rows = array();
+    $tempRow = array();
+    foreach ($res as $row) {
+        
+        $tempRow['id'] = $row['id'];
+        $tempRow['name'] = $row['name'];
+        $tempRow['mobile'] = $row['mobile'];
+        $tempRow['amount'] = $row['amount'];
+        $tempRow['datetime'] = $row['datetime'];
+        $tempRow['type'] = $row['type'];
+        $rows[] = $tempRow;
+    }
+    $bulkData['rows'] = $rows;
+    print_r(json_encode($bulkData));
+}
 $db->disconnect();
