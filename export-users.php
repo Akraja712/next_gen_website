@@ -4,7 +4,9 @@ $db = new Database();
 $db->connect();
 
 $currentdate = date('Y-m-d');
+$condition = "status IN (0, 1, 2)";
 $sql_query = "SELECT * FROM `users` WHERE $condition";
+
 $db->sql($sql_query);
 $developer_records = $db->getResult();
 
