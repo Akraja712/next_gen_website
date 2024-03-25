@@ -31,11 +31,13 @@ if (isset($_POST['btnEdit'])){
     $status = $db->escapeString($_POST['status']);
     $total_referrals = $db->escapeString(($_POST['total_referrals']));
     $convert_type = $db->escapeString(($_POST['convert_type']));
+    $account_num = $db->escapeString($_POST['account_num']);
+    $holder_name = $db->escapeString($_POST['holder_name']);
+    $bank = $db->escapeString($_POST['bank']);
+    $branch = $db->escapeString(($_POST['branch']));
+    $ifsc = $db->escapeString(($_POST['ifsc']));
 
-   
 
-
-    
     $error = array();
 
     if (empty($mobile)) {
@@ -56,71 +58,7 @@ if (isset($_POST['btnEdit'])){
 
     
             
-
-    if (!empty($mobile)) {
-
-        $refer_bonus_sent = $fn->get_value('users','refer_bonus_sent',$ID);
- 
-        if(!empty($enroll_date) && !empty($referred_by) && $refer_bonus_sent != 1){
-           
-            
-            $sql_query = "SELECT * FROM users WHERE refer_code =  '$referred_by'";
-            $db->sql($sql_query);
-            $res = $db->getResult();
-            $num = $db->numRows($res);
-
-            
-            if ($num == 1) {
-                $user_status = $res[0]['status'];
-                $user_id = $res[0]['id'];
-                if ($user_status == 1) {
-                    if ($plan_price == 2999) {
-                        $refer_orders = 500;
-                        $referral_bonus = 300;
-                    } elseif ($plan_price == 4999) {
-                        $refer_orders = 500;
-                        $referral_bonus = 600;
-                    } 
-                    $sql_query = "UPDATE users SET `total_referrals` = total_referrals + 1,`total_orders` = total_orders + $refer_orders,`hiring_earings` = hiring_earings + $referral_bonus  WHERE id =  $user_id";
-                    $db->sql($sql_query);
-                    $sql_query = "INSERT INTO transactions (user_id,amount,datetime,type)VALUES($user_id,$referral_bonus,'$datetime','refer_bonus')";
-                    $db->sql($sql_query);
-                                        
-                    $sql_query = "UPDATE users SET refer_bonus_sent = 1 WHERE id =  $ID";
-                    $db->sql($sql_query);
-
-
-                }
-              
- 
-            }
-            
-        }
-       
-        $register_bonus_sent = $fn->get_value('users','register_bonus_sent',$ID);
-            if (!empty($enroll_date) && $register_bonus_sent != 1 ) {
-                $sql_query = "UPDATE users SET register_bonus_sent = 1 WHERE id =  $ID";
-                $db->sql($sql_query);
-        
-                $sql_query = "UPDATE settings SET vacancies = vacancies - 1";
-                $db->sql($sql_query);
-
-                $joined_date = $date;
-                if(strlen($referred_by) < 4){
-                    $incentives = 50;
-                }else{
-                    $incentives = 7.5;
-                    
-                }
-
-            }
-
-            $link = "";
-            
-           
-           
-
-            $sql_query = "UPDATE users SET mobile='$mobile',earn='$earn',balance='$balance',referred_by='$referred_by',refer_code='$refer_code',withdrawal_status='$withdrawal_status',min_withdrawal='$min_withdrawal',status=$status,blocked = '$blocked',total_referrals = '$total_referrals',convert_type = '$convert_type'   WHERE id =  $ID";
+            $sql_query = "UPDATE users SET mobile='$mobile',earn='$earn',balance='$balance',referred_by='$referred_by',refer_code='$refer_code',withdrawal_status='$withdrawal_status',min_withdrawal='$min_withdrawal',status=$status,blocked = '$blocked',total_referrals = '$total_referrals',convert_type = '$convert_type',holder_name='$holder_name', bank='$bank', branch='$branch', ifsc='$ifsc', account_num='$account_num'   WHERE id =  $ID";
             $db->sql($sql_query);
             $update_result = $db->getResult();
     
@@ -137,7 +75,7 @@ if (isset($_POST['btnEdit'])){
                 $error['update_users'] = " <span class='label label-danger'>Failed to update</span>";
             }
         }
-    }
+    
 
 
  
@@ -279,7 +217,37 @@ if (isset($_POST['btnCancel'])) { ?>
                                 </div>
                             </div>   
                        </div>
-                    
+                       <div class="row">
+                            <div class="form-group">
+                            <div class='col-md-6'>
+                                    <label for="exampleInputEmail1">Account Number</label> <i class="text-danger asterik">*</i>
+                                    <input type="number" class="form-control" name="account_num" value="<?php echo $res[0]['account_num']; ?>">
+                                </div>
+                                <div class='col-md-6'>
+                                    <label for="exampleInputEmail1">Holder Name</label> <i class="text-danger asterik">*</i>
+                                    <input type="text" class="form-control" name="holder_name" value="<?php echo $res[0]['holder_name']; ?>">
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <label for="exampleInputEmail1">IFSC</label><i class="text-danger asterik">*</i>
+                                    <input type="text" class="form-control" name="ifsc" value="<?php echo $res[0]['ifsc']; ?>">
+                                </div>
+                                <div class="col-md-4">
+                                <label for="exampleInputEmail1">Bank</label><i class="text-danger asterik">*</i>
+                                    <input type="text" class="form-control" name="bank" value="<?php echo $res[0]['bank']; ?>">
+                                </div>
+                                <div class="col-md-4">
+                                <label for="exampleInputEmail1">Branch</label><i class="text-danger asterik">*</i>
+                                    <input type="text" class="form-control" name="branch" value="<?php echo $res[0]['branch']; ?>">
+                                </div>
+                               
+                                </div>
+                            </div>
+                            <br>
                             <br>
                             </div>
                      
