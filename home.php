@@ -50,7 +50,7 @@ include "header.php";
                             <h3><?php
                                 $sql = "SELECT COUNT(id) as total FROM users";
                                 if ($_SESSION['role'] == 'Admin') {
-                                    $sql .= " WHERE refer_code LIKE 'CMDS%'";
+                                    $sql .= " WHERE refer_code LIKE 'BLR%'";
                                 }
                                 $db->sql($sql);
                                 $res = $db->getResult();
