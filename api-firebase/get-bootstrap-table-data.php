@@ -110,6 +110,9 @@ $db->connect();
     $rows = array();
     $tempRow = array();
     foreach ($res as $row) {
+
+        $support_id = $row['support_id'];
+
       
 
         $operate = ' <a href="edit-users.php?id=' . $row['id'] . '"><i class="fa fa-edit"></i>Edit</a>';
@@ -131,6 +134,11 @@ $db->connect();
         $tempRow['bank'] = $row['bank'];
         $tempRow['branch'] = $row['branch'];
         $tempRow['ifsc'] = $row['ifsc'];
+        $sql = "SELECT name FROM `staffs` WHERE id = $support_id";
+        $db->sql($sql);
+        $res = $db->getResult();
+        $support_name = isset($res[0]['name']) ? $res[0]['name'] :"";
+        $tempRow['support_name'] = $support_name;
         $tempRow['device_id'] = $row['device_id'];
         if($row['status']==0)
             $tempRow['status'] ="<label class='label label-default'>Not Verify</label>";
@@ -206,7 +214,8 @@ if (isset($_GET['table']) && $_GET['table'] == 'users') {
     $tempRow = array();
     foreach ($res as $row) {
       
-
+        $support_id = $row['support_id'];
+        
         $operate = ' <a href="edit-users.php?id=' . $row['id'] . '"><i class="fa fa-edit"></i>Edit</a>';
         $operate .= ' <a class="text text-danger" href="delete-users.php?id=' . $row['id'] . '"><i class="fa fa-trash"></i>Delete</a>';
         $tempRow['id'] = $row['id'];
@@ -226,6 +235,11 @@ if (isset($_GET['table']) && $_GET['table'] == 'users') {
         $tempRow['bank'] = $row['bank'];
         $tempRow['branch'] = $row['branch'];
         $tempRow['ifsc'] = $row['ifsc'];
+        $sql = "SELECT name FROM `staffs` WHERE id = $support_id";
+        $db->sql($sql);
+        $res = $db->getResult();
+        $support_name = isset($res[0]['name']) ? $res[0]['name'] :"";
+        $tempRow['support_name'] = $support_name;
         $tempRow['device_id'] = $row['device_id'];
         if($row['status']==0)
             $tempRow['status'] ="<label class='label label-default'>Not Verify</label>";

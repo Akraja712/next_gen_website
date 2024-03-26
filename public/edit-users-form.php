@@ -36,6 +36,7 @@ if (isset($_POST['btnEdit'])){
     $bank = $db->escapeString($_POST['bank']);
     $branch = $db->escapeString(($_POST['branch']));
     $ifsc = $db->escapeString(($_POST['ifsc']));
+    $support_id = $db->escapeString(($_POST['support_id']));
    // $ecom_status = $db->escapeString(($_POST['ecom_status']));
 
 
@@ -56,10 +57,13 @@ if (isset($_POST['btnEdit'])){
     if (empty($languages)) {
         $error['languages'] = " <span class='label label-danger'>Required!</span>";
     }
+    if (empty($support_id)) {
+        $error['update_users'] = " <span class='label label-danger'> Support Required!</span>";
+    }
 
     
             
-            $sql_query = "UPDATE users SET mobile='$mobile',earn='$earn',balance='$balance',referred_by='$referred_by',refer_code='$refer_code',withdrawal_status='$withdrawal_status',min_withdrawal='$min_withdrawal',status=$status,blocked = '$blocked',total_referrals = '$total_referrals',convert_type = '$convert_type',holder_name='$holder_name', bank='$bank', branch='$branch', ifsc='$ifsc', account_num='$account_num'  WHERE id =  $ID";
+            $sql_query = "UPDATE users SET mobile='$mobile',earn='$earn',balance='$balance',referred_by='$referred_by',refer_code='$refer_code',withdrawal_status='$withdrawal_status',min_withdrawal='$min_withdrawal',status=$status,blocked = '$blocked',total_referrals = '$total_referrals',convert_type = '$convert_type',holder_name='$holder_name', bank='$bank', branch='$branch', ifsc='$ifsc', account_num='$account_num',support_id='$support_id' WHERE id =  $ID";
             $db->sql($sql_query);
             $update_result = $db->getResult();
     
@@ -173,6 +177,26 @@ if (isset($_POST['btnCancel'])) { ?>
                                         </label>
                                     </div>
                                 </div>
+                               </div>
+                             </div>
+                             <div class="row">
+                              <div class="form-group">
+                              <div class="form-group col-md-4">
+                                    <label for="exampleInputEmail1">Select Support</label> <i class="text-danger asterik">*</i>
+                                    <select id='support_id' name="support_id" class='form-control' style="background-color: #7EC8E3">
+                                             <option value="">--Select--</option>
+                                                <?php
+                                                $sql = "SELECT * FROM `staffs`";
+                                                $db->sql($sql);
+
+                                                $result = $db->getResult();
+                                                foreach ($result as $value) {
+                                                ?>
+                                                    <option value='<?= $value['id'] ?>' <?= $value['id']==$res[0]['support_id'] ? 'selected="selected"' : '';?>><?= $value['name'] ?></option>
+                                                    
+                                                <?php } ?>
+                                    </select>
+                            </div>
                                </div>
                              </div>
                         <br>

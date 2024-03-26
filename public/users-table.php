@@ -62,6 +62,7 @@
                                     <th  data-field="orders_earnings" data-sortable="true">Orders Earnings</th>
                                     <th  data-field="earn" data-sortable="true">Earn</th>
                                     <th  data-field="balance" data-sortable="true">Balance</th>
+                                    <th  data-field="support_name" data-sortable="true">Support Name</th>
                                     <th  data-field="status" data-sortable="true">Status</th>
                                    
                                 </tr>
