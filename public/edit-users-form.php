@@ -28,7 +28,7 @@ if (isset($_POST['btnEdit'])){
     $withdrawal_status = $db->escapeString($_POST['withdrawal_status']);
     $blocked = $db->escapeString($_POST['blocked']);
     $min_withdrawal = $db->escapeString($_POST['min_withdrawal']);
-    $status = $db->escapeString($_POST['status']);
+    //$status = $db->escapeString($_POST['status']);
     $total_referrals = $db->escapeString(($_POST['total_referrals']));
     $convert_type = $db->escapeString(($_POST['convert_type']));
     $account_num = $db->escapeString($_POST['account_num']);
@@ -37,7 +37,7 @@ if (isset($_POST['btnEdit'])){
     $branch = $db->escapeString(($_POST['branch']));
     $ifsc = $db->escapeString(($_POST['ifsc']));
     $support_id = $db->escapeString(($_POST['support_id']));
-   // $ecom_status = $db->escapeString(($_POST['ecom_status']));
+    $ecom_status = $db->escapeString(($_POST['ecom_status']));
 
 
     $error = array();
@@ -61,9 +61,50 @@ if (isset($_POST['btnEdit'])){
         $error['update_users'] = " <span class='label label-danger'> Support Required!</span>";
     }
 
-    
+    if (!empty($mobile) && 
+    !empty($support_id)) {
+
+        $refer_bonus_sent = $fn->get_value('users','refer_bonus_sent',$ID);
+        if (!empty($referred_by) && $refer_bonus_sent != 1) {
+            $sql_query = "SELECT * FROM users WHERE refer_code = '$referred_by'";
+            $db->sql($sql_query);
+            $res = $db->getResult();
+            $num = $db->numRows($res);
+        
+            if ($num == 1) {
+                $user_status = $res[0]['status'];
+                $ecom_status = $res[0]['ecom_status'];
+                $user_id = $res[0]['id'];
+                
+                if ($user_status == 1) {
+                    if ($ecom_status == 0) {
+                        $referral_bonus = 250;
+                    } else {
+                        if ($convert_type == 1) {
+                            $referral_bonus = 250;
+                        } elseif ($convert_type == 2) {
+                            $referral_bonus = 3000;
+                        } elseif ($convert_type == 3) {
+                            $referral_bonus = 4000;
+                        } elseif ($convert_type == 4) {
+                            $referral_bonus = 5000;
+                        }
+                    }
+        
+                    $sql_query = "UPDATE users SET `total_referrals` = total_referrals + 1, `hiring_earings` = hiring_earings + $referral_bonus  WHERE id = $user_id";
+                    $db->sql($sql_query);
+                    
+                    $sql_query = "INSERT INTO transactions (user_id, amount, datetime, type) VALUES ($user_id, $referral_bonus, '$datetime', 'refer_bonus')";
+                    $db->sql($sql_query);
+                    
+                    $sql_query = "UPDATE users SET refer_bonus_sent = 1 WHERE id = $user_id";
+                    $db->sql($sql_query);
+                }
+            }
+        }
+        
             
-            $sql_query = "UPDATE users SET mobile='$mobile',earn='$earn',balance='$balance',referred_by='$referred_by',refer_code='$refer_code',withdrawal_status='$withdrawal_status',min_withdrawal='$min_withdrawal',status=$status,blocked = '$blocked',total_referrals = '$total_referrals',convert_type = '$convert_type',holder_name='$holder_name', bank='$bank', branch='$branch', ifsc='$ifsc', account_num='$account_num',support_id='$support_id' WHERE id =  $ID";
+            $sql_query = "UPDATE users SET mobile='$mobile',earn='$earn',balance='$balance',referred_by='$referred_by',refer_code='$refer_code',withdrawal_status='$withdrawal_status',min_withdrawal='$min_withdrawal',ecom_status=$ecom_status,blocked = '$blocked',total_referrals = '$total_referrals',convert_type = '$convert_type',holder_name='$holder_name', bank='$bank', branch='$branch', ifsc='$ifsc', account_num='$account_num',support_id='$support_id' WHERE id =  $ID";
             $db->sql($sql_query);
             $update_result = $db->getResult();
     
@@ -80,7 +121,7 @@ if (isset($_POST['btnEdit'])){
                 $error['update_users'] = " <span class='label label-danger'>Failed to update</span>";
             }
         }
-    
+}
 
 
  
@@ -165,15 +206,15 @@ if (isset($_POST['btnCancel'])) { ?>
                             </div>
                                    <div class="form-group col-md-6">
                                     <label class="control-label">Status</label><i class="text-danger asterik">*</i><br>
-                                    <div id="status" class="btn-group">
+                                    <div id="ecom_status" class="btn-group">
                                         <label class="btn btn-primary" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                                            <input type="radio" name="status" value="0" <?= ($res[0]['status'] == 0) ? 'checked' : ''; ?>> Not-verified
+                                            <input type="radio" name="ecom_status" value="0" <?= ($res[0]['ecom_status'] == 0) ? 'checked' : ''; ?>> Not-verified
                                         </label>
                                         <label class="btn btn-success" data-toggle-class="btn-default" data-toggle-passive-class="btn-default">
-                                            <input type="radio" name="status" value="1" <?= ($res[0]['status'] == 1) ? 'checked' : ''; ?>> Verified
+                                            <input type="radio" name="ecom_status" value="1" <?= ($res[0]['ecom_status'] == 1) ? 'checked' : ''; ?>> Verified
                                         </label>
                                         <label class="btn btn-danger" data-toggle-class="btn-default" data-toggle-passive-class="btn-default">
-                                            <input type="radio" name="status" value="2" <?= ($res[0]['status'] == 2) ? 'checked' : ''; ?>> Blocked
+                                            <input type="radio" name="ecom_status" value="2" <?= ($res[0]['ecom_status'] == 2) ? 'checked' : ''; ?>> Blocked
                                         </label>
                                     </div>
                                 </div>
