@@ -89,7 +89,6 @@ if (isset($_POST['btnEdit'])){
                         } elseif ($convert_type == 4) {
                             $referral_bonus = 250;
                         }
-                    }
         
                     $sql_query = "UPDATE users SET `total_referrals` = total_referrals + 1, `hiring_earings` = hiring_earings + $referral_bonus  WHERE id = $user_id";
                     $db->sql($sql_query);
@@ -97,8 +96,9 @@ if (isset($_POST['btnEdit'])){
                     $sql_query = "INSERT INTO transactions (user_id, amount, datetime, type) VALUES ($user_id, $referral_bonus, '$datetime', 'refer_bonus')";
                     $db->sql($sql_query);
                     
-                    $sql_query = "UPDATE users SET refer_bonus_sent = 1 WHERE id = $user_id";
+                    $sql_query = "UPDATE users SET refer_bonus_sent = 1 WHERE id = $ID";
                     $db->sql($sql_query);
+                    }
                 }
             }
         }
@@ -122,7 +122,6 @@ if (isset($_POST['btnEdit'])){
             }
         }
 }
-
  
 $data = array();
 
