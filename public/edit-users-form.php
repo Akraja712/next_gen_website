@@ -28,7 +28,7 @@ if (isset($_POST['btnEdit'])){
     $withdrawal_status = $db->escapeString($_POST['withdrawal_status']);
     $blocked = $db->escapeString($_POST['blocked']);
     $min_withdrawal = $db->escapeString($_POST['min_withdrawal']);
-    //$status = $db->escapeString($_POST['status']);
+   // $status = $db->escapeString($_POST['status']);
     $total_referrals = $db->escapeString(($_POST['total_referrals']));
     $convert_type = $db->escapeString(($_POST['convert_type']));
     $account_num = $db->escapeString($_POST['account_num']);
@@ -81,13 +81,13 @@ if (isset($_POST['btnEdit'])){
                         $referral_bonus = 250;
                     } else {
                         if ($convert_type == 1) {
-                            $referral_bonus = 250;
-                        } elseif ($convert_type == 2) {
                             $referral_bonus = 3000;
-                        } elseif ($convert_type == 3) {
+                        } elseif ($convert_type == 2) {
                             $referral_bonus = 4000;
-                        } elseif ($convert_type == 4) {
+                        } elseif ($convert_type == 3) {
                             $referral_bonus = 5000;
+                        } elseif ($convert_type == 4) {
+                            $referral_bonus = 250;
                         }
                     }
         
@@ -122,7 +122,6 @@ if (isset($_POST['btnEdit'])){
             }
         }
 }
-
 
  
 $data = array();
