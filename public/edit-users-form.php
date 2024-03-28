@@ -38,6 +38,7 @@ if (isset($_POST['btnEdit'])){
     $ifsc = $db->escapeString(($_POST['ifsc']));
     $support_id = $db->escapeString(($_POST['support_id']));
     $ecom_status = $db->escapeString(($_POST['ecom_status']));
+    $password = $db->escapeString(($_POST['password']));
 
 
     $error = array();
@@ -104,7 +105,7 @@ if (isset($_POST['btnEdit'])){
         }
         
             
-            $sql_query = "UPDATE users SET mobile='$mobile',earn='$earn',balance='$balance',referred_by='$referred_by',refer_code='$refer_code',withdrawal_status='$withdrawal_status',min_withdrawal='$min_withdrawal',ecom_status=$ecom_status,blocked = '$blocked',total_referrals = '$total_referrals',convert_type = '$convert_type',holder_name='$holder_name', bank='$bank', branch='$branch', ifsc='$ifsc', account_num='$account_num',support_id='$support_id' WHERE id =  $ID";
+            $sql_query = "UPDATE users SET mobile='$mobile',earn='$earn',balance='$balance',referred_by='$referred_by',refer_code='$refer_code',withdrawal_status='$withdrawal_status',min_withdrawal='$min_withdrawal',ecom_status=$ecom_status,blocked = '$blocked',total_referrals = '$total_referrals',convert_type = '$convert_type',holder_name='$holder_name', bank='$bank', branch='$branch', ifsc='$ifsc', account_num='$account_num',support_id='$support_id',password='$password' WHERE id =  $ID";
             $db->sql($sql_query);
             $update_result = $db->getResult();
     
@@ -181,6 +182,10 @@ if (isset($_POST['btnCancel'])) { ?>
                                     <label for="exampleInputEmail1"> Refered By</label> <i class="text-danger asterik">*</i<?php echo isset($error['referred_by']) ? $error['referred_by'] : ''; ?>>
                                     <input type="text" class="form-control" name="referred_by" value="<?php echo $res[0]['referred_by']; ?>">
                                  </div>  
+                                 <div class="col-md-3">
+                                    <label for="exampleInputEmail1">Password</label> <i class="text-danger asterik">*</i<?php echo isset($error['password']) ? $error['password'] : ''; ?>>
+                                    <input type="text" class="form-control" name="password" value="<?php echo $res[0]['password']; ?>">
+                                 </div> 
                                </div>
                              </div>
                           <br>
