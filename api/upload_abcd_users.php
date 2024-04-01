@@ -25,14 +25,15 @@ if ($num >= 1) {
         $mobile = $row['mobile'];
         $password = $row['password'];
         $dob = $row['dob'];
+        $balance = $row['balance'];
         $refer_code = $row['refer_code'];
         $device_id = $row['device_id'];
         $referred_by = 'amail';
         $hr_id = $refer_code;
         $datetime = date('Y-m-d H:i:s');
     
-        $sql = "INSERT INTO users (`name`, `mobile`, `email`, `password`, `location`, `dob`, `hr_id`, `aadhaar_num`, `referred_by`, `device_id`, `last_updated`, `registered_date`, `order_available`) 
-        VALUES ('$name', '$mobile', '$email', '$password', '0', '$dob', '$hr_id', '0', '$referred_by', '$device_id', '$datetime', '$datetime', '1')";
+        $sql = "INSERT INTO users (`name`, `mobile`, `email`, `password`, `location`, `dob`, `hr_id`, `aadhaar_num`, `referred_by`, `device_id`, `last_updated`, `registered_date`, `order_available`,`balance`) 
+        VALUES ('$name', '$mobile', '$email', '$password', '0', '$dob', '$hr_id', '0', '$referred_by', '$device_id', '$datetime', '$datetime', '1','$balance')";
 
         $db->sql($sql);  
     }
