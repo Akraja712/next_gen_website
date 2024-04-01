@@ -9,16 +9,23 @@ $sql_query = "SELECT id, mobile, name, email, total_referrals, earn, balance, de
 $db->sql($sql_query);
 $developer_records = $db->getResult();
 
-$filename = "AllUsers-data" . date('Ymd') . ".xls";
-header("Content-Type: application/vnd.ms-excel");
+$filename = "AllUsers-data" . date('Ymd') . ".csv";
+
+// Set the appropriate headers for CSV
+header('Content-Type: text/csv');
 header("Content-Disposition: attachment; filename=\"$filename\"");
+header('Cache-Control: no-cache');
+header('Pragma: no-cache');
+
+$fp = fopen('php://output', 'w');
+
 $show_column = false;
 
 if (!empty($developer_records)) {
     // Display column names in the first row
     foreach ($developer_records as $record) {
         if (!$show_column) {
-            echo implode("\t", array_keys($record)) . "\n";
+            fputcsv($fp, array_keys($record));
             $show_column = true;
         }
 
@@ -32,9 +39,10 @@ if (!empty($developer_records)) {
         // Append support name to the user record
         $record['support_id'] = $support_name;
 
-        echo implode("\t", array_values($record)) . "\n";
+        fputcsv($fp, array_values($record));
     }
 }
 
+fclose($fp);
 exit;
 ?>

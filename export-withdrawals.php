@@ -14,6 +14,18 @@ $filename = "withdrawals-data" . date('Ymd') . ".xls";
 header("Content-Type: application/vnd.ms-excel");
 header("Content-Disposition: attachment; filename=\"$filename\"");
 $show_column = false;
+
+$filename = "AllUsers-data" . date('Ymd') . ".csv";
+
+// Set the appropriate headers for CSV
+header('Content-Type: text/csv');
+header("Content-Disposition: attachment; filename=\"$filename\"");
+header('Cache-Control: no-cache');
+header('Pragma: no-cache');
+
+$fp = fopen('php://output', 'w');
+
+$show_column = false;
 if (!empty($developer_records)) {
     foreach ($developer_records as $record) {
         if (!$show_column) {
@@ -24,5 +36,8 @@ if (!empty($developer_records)) {
         echo implode("\t", array_values($record)) . "\n";
     }
 }
+
+fclose($fp);
 exit;
 ?>
+
