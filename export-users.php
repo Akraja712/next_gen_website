@@ -4,7 +4,7 @@ $db = new Database();
 $db->connect();
 
 $currentdate = date('Y-m-d');
-$condition = "status IN (1, 2, 3)";
+$condition = "status IN (0 ,1, 2)";
 $sql_query = "SELECT id, mobile, name, email, total_referrals, earn, balance, device_id, referred_by, refer_code, withdrawal_status, status, min_withdrawal, CONCAT(',',account_num, ',') AS account_num, holder_name, bank, branch, ifsc,blocked,convert_type,support_id FROM `users` WHERE $condition"; // Fetch all users without any condition
 $db->sql($sql_query);
 $developer_records = $db->getResult();
