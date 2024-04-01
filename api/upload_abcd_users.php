@@ -27,7 +27,7 @@ if ($num >= 1) {
         $dob = $row['dob'];
         $refer_code = $row['refer_code'];
         $device_id = $row['device_id'];
-        $referred_by = 'abcd';
+        $referred_by = 'amail';
         $hr_id = $refer_code;
         $datetime = date('Y-m-d H:i:s');
     
