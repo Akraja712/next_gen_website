@@ -83,46 +83,32 @@ if (isset($_POST['bulk_upload']) && $_POST['bulk_upload'] == 1) {
     if (!$result) {
         $error = true;
     }
-
+    
     if ($_FILES["upload_file"]["size"] > 0 && $error == false) {
         $file = fopen($filename, "r");
-
+    
+        // Get the first row to determine column names
+        $headers = fgetcsv($file, 10000, ",");
+    
+        // Map column names to their respective positions
+        $columnMap = array_flip($headers);
+    
         while (($emapData = fgetcsv($file, 10000, ",")) !== FALSE) {
-            if ($count1 != 0) {
-                $mobile = trim($db->escapeString($emapData[0]));
-
-                $sql = "SELECT * FROM `users` WHERE mobile = '$mobile'";
-                $db->sql($sql);
-                $res = $db->getResult();
-                $num = $db->numRows($res);
-                
-                if ($num == 1) {
-                    $user_status = $res[0]['status'];
-                    $refer_bonus_sent = $res[0]['refer_bonus_sent'];
-                    $user_id = $res[0]['id'];
-
-                    if ($user_status == 1 && $refer_bonus_sent != 1) {
-                        $refer_orders = 500;
-                        $referral_bonus = 600;
-        
-
-                            $sql_query = "UPDATE users SET `total_referrals` = total_referrals + 1, `total_orders` = total_orders + $refer_orders, `hiring_earings` = hiring_earings + $referral_bonus WHERE id =  $user_id";
-                            $db->sql($sql_query);
-        
-
-                        $sql_query = "INSERT INTO transactions (user_id, amount, datetime, type) VALUES ($user_id, $referral_bonus, '$datetime', 'refer_bonus')";
-                        $db->sql($sql_query);
-                    }
-                }
-            
-
-            }
-
-            $count1++;
+            // Extract values using column names
+            $mobile = trim($db->escapeString($emapData[$columnMap['mobile']]));
+            $name = trim($db->escapeString($emapData[$columnMap['name']]));
+            $email = trim($db->escapeString($emapData[$columnMap['email']]));
+            $balance = trim($db->escapeString($emapData[$columnMap['balance']]));
+            $device_id = trim($db->escapeString($emapData[$columnMap['device_id']]));
+            $referred_by = trim($db->escapeString($emapData[$columnMap['referred_by']]));
+            $support_id = trim($db->escapeString($emapData[$columnMap['support_id']]));
+    
+            $sql_query = "INSERT INTO users (name, mobile, email, referred_by, balance, support_id, device_id) VALUES ('$name', '$mobile', '$email', '$referred_by', '$balance', '$support_id', '$device_id')";
+            $db->sql($sql_query);
         }
-
-        fclose($file);
-
+    
+        fclose($file); // Move fclose inside this block
+    
         echo "<p class='alert alert-success'>CSV file is successfully imported!</p><br>";
     } else {
         echo "<p class='alert alert-danger'>Invalid file format! Please upload data in CSV file!</p><br>";
