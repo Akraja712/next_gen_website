@@ -106,7 +106,7 @@ if (isset($_POST['bulk_upload']) && $_POST['bulk_upload'] == 1) {
 
             $last_user_id++;
             $refer_code = 'NHR' . $last_user_id;
-            $sql_query = "INSERT INTO users (name, mobile, email, referred_by, balance, support_id, device_id, refer_code) VALUES ('$name', '$mobile', '$email', '$referred_by', '$balance', '$support_id', '$device_id', '$refer_code')";
+            $sql_query = "INSERT INTO users (name, mobile, email, referred_by, balance, support_id, device_id, refer_code,withdrawal_status) VALUES ('$name', '$mobile', '$email', '$referred_by', '$balance', '$support_id', '$device_id', '$refer_code',0)";
             $db->sql($sql_query);
 
         }
