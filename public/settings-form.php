@@ -4,68 +4,48 @@ $function = new functions;
 include_once('includes/custom-functions.php');
 $fn = new custom_functions;
 
-?>
-<?php
+
 if (isset($_POST['btnUpdate'])) {
-
-    if ($_FILES['offer_image']['size'] != 0 && $_FILES['offer_image']['error'] == 0 && !empty($_FILES['offer_image'])) {
-        $extension = pathinfo($_FILES["offer_image"]["name"])['extension'];
-
-        $result = $fn->validate_image($_FILES["offer_image"]);
-        $target_path = 'upload/images/';
-        
-        $filename = microtime(true) . '.' . strtolower($extension);
-        $full_path = $target_path . "" . $filename;
-        if (!move_uploaded_file($_FILES["offer_image"]["tmp_name"], $full_path)) {
-            echo '<p class="alert alert-danger">Can not upload image.</p>';
-            return false;
-            exit();
-        }
-        if (!empty($old_image)) {
-            unlink($old_image);
-        }
-        $upload_image = 'upload/images/' . $filename;
-        $sql = "UPDATE settings SET `offer_image`='" . $upload_image . "' WHERE id = 1";
-        $db->sql($sql);
-    }
-    $code_generate = $db->escapeString(($_POST['code_generate']));
-    $withdrawal_status = $db->escapeString(($_POST['withdrawal_status']));
-    $sync_time = $db->escapeString(($_POST['sync_time']));
-    $duration = $db->escapeString(($_POST['duration']));
-    $min_withdrawal = $db->escapeString(($_POST['min_withdrawal']));
-    $chat_support = $db->escapeString(($_POST['chat_support']));
-    $reward = $db->escapeString(($_POST['reward']));
-    $ad_show_time = $db->escapeString(($_POST['ad_show_time']));
-    $ad_status = $db->escapeString(($_POST['ad_status']));
-    $ad_type = (isset($_POST['ad_type']) && !empty($_POST['ad_type'])) ? $db->escapeString($fn->xss_clean($_POST['ad_type'])) : "0";   
-    $fetch_time = $db->escapeString(($_POST['fetch_time']));
-    $sync_codes = $db->escapeString(($_POST['sync_codes']));
-    $num_sync_times = $db->escapeString(($_POST['num_sync_times']));
-    $min_sync_refer_wallet = $db->escapeString(($_POST['min_sync_refer_wallet']));
-    $main_content = $db->escapeString(($_POST['main_content']));
-    $plan1_video = $db->escapeString(($_POST['plan1_video']));
-    $plan2_video = $db->escapeString(($_POST['plan2_video']));
     
-    $error = array();
-    $sql_query = "UPDATE settings SET code_generate=$code_generate,withdrawal_status=$withdrawal_status,sync_time=$sync_time,duration='$duration',min_withdrawal = $min_withdrawal,chat_support = $chat_support,reward = $reward,ad_show_time = $ad_show_time,ad_status = $ad_status,ad_type='$ad_type',fetch_time = $fetch_time,sync_codes = $sync_codes,min_sync_refer_wallet = $min_sync_refer_wallet,num_sync_times='$num_sync_times',main_content='$main_content',plan1_video='$plan1_video',plan2_video='$plan2_video' WHERE id=1";
-    $db->sql($sql_query);
-    $result = $db->getResult();
-    if (!empty($result)) {
-        $result = 0;
-    } else {
-        $result = 1;
-    }
+    $register_coins = $db->escapeString(($_POST['register_coins']));
+    $refer_coins = $db->escapeString(($_POST['refer_coins']));
+    $withdrawal_status = $db->escapeString(($_POST['withdrawal_status']));
+    $min_dp_coins = $db->escapeString(($_POST['min_dp_coins']));
+    $max_dp_coins = $db->escapeString(($_POST['max_dp_coins']));
+    $challenge_status = $db->escapeString(($_POST['challenge_status']));
+    $min_withdrawal = $db->escapeString(($_POST['min_withdrawal']));
+    $upi = $db->escapeString(($_POST['upi']));
+    $contact_us = $db->escapeString(($_POST['contact_us']));
+   
+    $whatsapp_channel_link = $db->escapeString(($_POST['whatsapp_channel_link']));
+    $job_video = $db->escapeString(($_POST['job_video']));
+    $post_video_url = $db->escapeString(($_POST['post_video_url']));
+    $purchase_plan_link = $db->escapeString(($_POST['purchase_plan_link']));
+    $job_details = $db->escapeString(($_POST['job_details']));
+    $post_video_details = $db->escapeString(($_POST['post_video_details']));
+    
 
-    if ($result == 1) {
-        
-        $error['update'] = "<section class='content-header'>
-                                        <span class='label label-success'>Settings Updated Successfully</span> </section>";
-    } else {
-        $error['update'] = " <span class='label label-danger'>Failed</span>";
-    }
-    }
+            $error = array();
+            $sql_query = "UPDATE settings SET register_coins=$register_coins,refer_coins='$refer_coins',withdrawal_status=$withdrawal_status,challenge_status=$challenge_status,min_dp_coins='$min_dp_coins',max_dp_coins='$max_dp_coins',min_withdrawal ='$min_withdrawal',upi='$upi',contact_us='$contact_us',whatsapp_channel_link='$whatsapp_channel_link',job_video='$job_video',job_details='$job_details',post_video_url='$post_video_url',post_video_details='$post_video_details',purchase_plan_link='$purchase_plan_link' WHERE id=1";
+            $db->sql($sql_query);
+            $result = $db->getResult();
+            if (!empty($result)) {
+                $result = 0;
+            } else {
+                $result = 1;
+            }
 
-    // create array variable to store previous data
+            if ($result == 1) {
+                
+                $error['update'] = "<section class='content-header'>
+                                                <span class='label label-success'>Settings Updated Successfully</span> </section>";
+            } else {
+                $error['update'] = " <span class='label label-danger'>Failed</span>";
+            }
+        }
+  
+
+// create array variable to store previous data
 $data = array();
 
 $sql_query = "SELECT * FROM settings WHERE id = 1";
@@ -82,7 +62,7 @@ $res = $db->getResult();
 </section>
 <section class="content">
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-12">
            
             <!-- general form elements -->
             <div class="box box-primary">
@@ -93,17 +73,8 @@ $res = $db->getResult();
                 <!-- form start -->
                 <form name="delivery_charge" method="post" enctype="multipart/form-data">
                     <div class="box-body">
-                   
                             <div class="row">
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="">Code Generate</label><br>
-                                        <input type="checkbox" id="code_generate_button" class="js-switch" <?= isset($res[0]['code_generate']) && $res[0]['code_generate'] == 1 ? 'checked' : '' ?>>
-                                        <input type="hidden" id="code_generate_status" name="code_generate" value="<?= isset($res[0]['code_generate']) && $res[0]['code_generate'] == 1 ? 1 : 0 ?>">
-                                    </div>
-
-                                </div>
-                                <div class="col-md-3">
+							    <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Withdrawal Status</label><br>
                                         <input type="checkbox" id="withdrawal_button" class="js-switch" <?= isset($res[0]['withdrawal_status']) && $res[0]['withdrawal_status'] == 1 ? 'checked' : '' ?>>
@@ -112,44 +83,31 @@ $res = $db->getResult();
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="">Chat Support</label><br>
-                                        <input type="checkbox" id="chat_button" class="js-switch" <?= isset($res[0]['chat_support']) && $res[0]['chat_support'] == 1 ? 'checked' : '' ?>>
-                                        <input type="hidden" id="chat_support" name="chat_support" value="<?= isset($res[0]['chat_support']) && $res[0]['chat_support'] == 1 ? 1 : 0 ?>">
+                                        <label for="">Watch Ads Status</label><br>
+                                        <input type="checkbox" id="challenge_button" class="js-switch" <?= isset($res[0]['challenge_status']) && $res[0]['challenge_status'] == 1 ? 'checked' : '' ?>>
+                                        <input type="hidden" id="challenge_status" name="challenge_status" value="<?= isset($res[0]['challenge_status']) && $res[0]['challenge_status'] == 1 ? 1 : 0 ?>">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="">Ad Status</label><br>
-                                        <input type="checkbox" id="ad_button" class="js-switch" <?= isset($res[0]['ad_status']) && $res[0]['ad_status'] == 1 ? 'checked' : '' ?>>
-                                        <input type="hidden" id="ad_status" name="ad_status" value="<?= isset($res[0]['ad_status']) && $res[0]['ad_status'] == 1 ? 1 : 0 ?>">
+                                        <label for="">UPI</label><br>
+                                        <input type="text" class="form-control" name="upi" value="<?= $res[0]['upi'] ?>">
                                     </div>
                                 </div>
+								
                             </div>
                            <br>
-                            <div class="row">
-                                <div class="col-md-4">
-                                   <div class="form-group" id="status" style="<?php echo isset($res[0]['ad_status']) == 1 ? '' : 'display:none;' ?>">
-                                        <label class="control-label">Ad Type</label> <i class="text-danger asterik">*</i><br>
-                                        <div  class="btn-group">
-                                            <label class="btn btn-primary" data-toggle-class="btn-default" data-toggle-passive-class="btn-default">
-                                                <input type="radio" name="ad_type" value="1" <?= ($res[0]['ad_type'] == 1) ? 'checked' : ''; ?>> Google Ad
-                                            </label>
-                                            <label class="btn btn-info" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                                                <input type="radio" name="ad_type" value="2" <?= ($res[0]['ad_type'] == 2) ? 'checked' : ''; ?>> Private Ad
-                                            </label>
-                                        </div>
+						   <div class="row">
+						        <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="">Register Coins</label><br>
+                                        <input type="number"class="form-control" name="register_coins" value="<?= $res[0]['register_coins'] ?>">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="">Sync Time(min)</label><br>
-                                        <input type="number"class="form-control" name="sync_time" value="<?= $res[0]['sync_time'] ?>">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="">Duration <small>(days)</small></label><br>
-                                        <input type="number"class="form-control" name="duration" value="<?= $res[0]['duration'] ?>">
+                                        <label for="">Refer Coins</label><br>
+                                        <input type="number"class="form-control" name="refer_coins" value="<?= $res[0]['refer_coins'] ?>">
                                     </div>
                                 </div>
                             </div>
@@ -163,79 +121,69 @@ $res = $db->getResult();
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="">Code Rewards</label><br>
-                                        <input type="number"class="form-control" name="reward" value="<?= $res[0]['reward'] ?>">
+                                        <label for="">Minimum Deposit Coins</label><br>
+                                        <input type="number"class="form-control" name="min_dp_coins" value="<?= $res[0]['min_dp_coins'] ?>">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="">Ad Show Time(min)</label><br>
-                                        <input type="number"class="form-control" name="ad_show_time" value="<?= $res[0]['ad_show_time'] ?>">
+                                        <label for="">Maximum Deposit Coins</label><br>
+                                        <input type="number"class="form-control" name="max_dp_coins" value="<?= $res[0]['max_dp_coins'] ?>">
                                     </div>
                                 </div>
                             </div>
                             <br>
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="">Fetch Time(sec)</label><br>
-                                        <input type="number"class="form-control" name="fetch_time" value="<?= $res[0]['fetch_time'] ?>">
+                                        <label for="">Contact Us</label><br>
+                                        <textarea type="text" rows="3" class="form-control" name="contact_us" ><?= $res[0]['contact_us'] ?></textarea>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                              
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="">Sync Codes</label><br>
-                                        <input type="number"class="form-control" name="sync_codes" value="<?= $res[0]['sync_codes'] ?>">
+                                        <label for="">Whatsapp Channel Link</label><br>
+                                        <input type="text"class="form-control" name="whatsapp_channel_link" value="<?= $res[0]['whatsapp_channel_link'] ?>">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="">Number of Sync Times</label><br>
-                                        <input type="number"class="form-control" name="num_sync_times" value="<?= $res[0]['num_sync_times'] ?>">
+                                        <label for="">Job Video</label><br>
+                                        <input type="text"class="form-control" name="job_video" value="<?= $res[0]['job_video'] ?>">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="">Post video Url</label><br>
+                                        <input type="text"class="form-control" name="post_video_url" value="<?= $res[0]['post_video_url'] ?>">
                                     </div>
                                 </div>
                             </div>
                             <br>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="">Minimum Sync Refer Wallet</label><br>
-                                        <input type="number"class="form-control" name="min_sync_refer_wallet" value="<?= $res[0]['min_sync_refer_wallet'] ?>">
+                                        <label for="">Job Details</label><br>
+                                        <input type="text" class="form-control" name="job_details" value="<?= $res[0]['job_details'] ?>">
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                   <div class="form-group">
-                                        <label for="exampleInputFile">Offer Image</label>
-                                        <input class="form-control" type="file" accept="image/png,  image/jpeg" onchange="readURL(this);"  name="offer_image" id="offer_image">
-                                        <p class="help-block"><img id="blah" src="<?php echo $res[0]['offer_image']; ?>" style="max-width:30%;padding:4px;" /></p>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="">Post Video Details</label><br>
+                                        <input type="text" class="form-control" name="post_video_details" value="<?= $res[0]['post_video_details'] ?>">
                                     </div>
-                               </div>
-                            </div>    
-                            <div class="row">
-                            <div class="col-md-6">
-                              <div class="form-group">
-                                <label for="">30 Days Plan Video</label><br>
-                                <input type="text" class="form-control" name="plan1_video" value="<?= $res[0]['plan1_video'] ?>">
-                             </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="">Purchase Plan Link</label><br>
+                                        <input type="text"class="form-control" name="purchase_plan_link" value="<?= $res[0]['purchase_plan_link'] ?>">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                              <div class="form-group">
-                                  <label for="">50 Days Plan Video</label><br>
-                                  <input type="text" class="form-control" name="plan2_video" value="<?= $res[0]['plan2_video'] ?>">
-                               </div>
-                            </div>
-                          </div>
-                            <br>   
-                            <div class="form-group">
-                                <label for="main_content">Main Content :</label> <i class="text-danger asterik">*</i><?php echo isset($error['main_content']) ? $error['main_content'] : ''; ?>
-                                <textarea name="main_content" id="main_content" class="form-control" rows="8"><?php echo $res[0]['main_content']; ?></textarea>
-                                <script type="text/javascript" src="css/js/ckeditor/ckeditor.js"></script>
-                                <script type="text/javascript">
-                                    CKEDITOR.replace('main_content');
-                                </script>
-                            </div>   
-
-                            <br>
                     </div>
                   
                     <!-- /.box-body -->
@@ -254,29 +202,16 @@ $res = $db->getResult();
 <div class="separator"> </div>
 
 <?php $db->disconnect(); ?>
-<script>
-    $('#delivery_charge').validate({
-        rules: {
-            main_content: {
-                required: function(textarea) {
-                    CKEDITOR.instances[textarea.id].updateElement();
-                    var editorcontent = textarea.value.replace(/<[^>]*>/gi, '');
-                    return editorcontent.length === 0;
-                }
-            }
-        }
-    });
-</script>
 
 <script>
-    var changeCheckbox = document.querySelector('#code_generate_button');
+    var changeCheckbox = document.querySelector('#challenge_button');
     var init = new Switchery(changeCheckbox);
     changeCheckbox.onchange = function() {
         if ($(this).is(':checked')) {
-            $('#code_generate_status').val(1);
+            $('#challenge_status').val(1);
 
         } else {
-            $('#code_generate_status').val(0);
+            $('#challenge_status').val(0);
         }
     };
 </script>
@@ -290,33 +225,6 @@ $res = $db->getResult();
 
         } else {
             $('#withdrawal_status').val(0);
-        }
-    };
-</script>
-
-<script>
-    var changeCheckbox = document.querySelector('#chat_button');
-    var init = new Switchery(changeCheckbox);
-    changeCheckbox.onchange = function() {
-        if ($(this).is(':checked')) {
-            $('#chat_support').val(1);
-
-        } else {
-            $('#chat_support').val(0);
-        }
-    };
-</script>
-<script>
-    var changeCheckbox = document.querySelector('#ad_button');
-    var init = new Switchery(changeCheckbox);
-    changeCheckbox.onchange = function() {
-        if ($(this).is(':checked')) {
-            $('#ad_status').val(1);
-            $('#status').show();
-
-        } else {
-            $('#ad_status').val(0);
-            $('#status').hide();
         }
     };
 </script>
