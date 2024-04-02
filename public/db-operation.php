@@ -86,13 +86,14 @@ if (isset($_POST['bulk_upload']) && $_POST['bulk_upload'] == 1) {
     
     if ($_FILES["upload_file"]["size"] > 0 && $error == false) {
         $file = fopen($filename, "r");
-    
+
         // Get the first row to determine column names
         $headers = fgetcsv($file, 10000, ",");
-    
+
         // Map column names to their respective positions
         $columnMap = array_flip($headers);
-    
+        $last_user_id = 4925;
+
         while (($emapData = fgetcsv($file, 10000, ",")) !== FALSE) {
             // Extract values using column names
             $mobile = trim($db->escapeString($emapData[$columnMap['mobile']]));
@@ -102,18 +103,23 @@ if (isset($_POST['bulk_upload']) && $_POST['bulk_upload'] == 1) {
             $device_id = trim($db->escapeString($emapData[$columnMap['device_id']]));
             $referred_by = trim($db->escapeString($emapData[$columnMap['referred_by']]));
             $support_id = trim($db->escapeString($emapData[$columnMap['support_id']]));
-    
-            $sql_query = "INSERT INTO users (name, mobile, email, referred_by, balance, support_id, device_id) VALUES ('$name', '$mobile', '$email', '$referred_by', '$balance', '$support_id', '$device_id')";
+
+            $last_user_id++;
+            $refer_code = 'NHR' . $last_user_id;
+            $sql_query = "INSERT INTO users (name, mobile, email, referred_by, balance, support_id, device_id, refer_code) VALUES ('$name', '$mobile', '$email', '$referred_by', '$balance', '$support_id', '$device_id', '$refer_code')";
             $db->sql($sql_query);
+
         }
-    
-        fclose($file); // Move fclose inside this block
-    
+
+        fclose($file);
+
         echo "<p class='alert alert-success'>CSV file is successfully imported!</p><br>";
     } else {
         echo "<p class='alert alert-danger'>Invalid file format! Please upload data in CSV file!</p><br>";
     }
 }
+
+
 
 if (isset($_POST['bulk_approval']) && $_POST['bulk_approval'] == 1) {
     $count = 0;
